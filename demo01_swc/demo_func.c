@@ -23,10 +23,16 @@ void as3_test01() __attribute__((used,
 void as3_test02()  __attribute__((used,
 	annotate("as3sig:public function as3_test02(signstr:String, buflen:int ):int"),
 	annotate(AS3_PACKAGE_NAME)));
-	
+
+// 03修改AS传入的内存块数据，并确定返回的数据是修改过的。	
 void as3_test03()  __attribute__((used,
 	annotate("as3sig:public function as3_test03(bufbytes:int, buflen:int ):int"),
 	annotate(AS3_PACKAGE_NAME)));
+
+void as3_test0301() __attribute__((used,
+    annotate("as3sig:public function as3_test0301(byteData:ByteArray):int"),
+    annotate(AS3_PACKAGE_NAME),
+    annotate("as3import:flash.utils.ByteArray")));
 
 // 04修改传入的一个AS中的int指针，05使用修改过的值
 void as3_test04()  __attribute__((used,
@@ -37,11 +43,13 @@ void as3_test05()  __attribute__((used,
 	annotate("as3sig:public function as3_test05(hd:int):int"),
 	annotate(AS3_PACKAGE_NAME)));
 
+// 06测试两个worker对全局变量值的修改和读取，结果为修改无效。
 void as3_test06() __attribute__((used,
 	annotate("as3sig:public function as3_test06(num:int):int"),
 	annotate(AS3_PACKAGE_NAME)));
 
 void as3_trace(char* str);
+void as3_tracef(const char* format, ...);
 int test_param(char *sign, int len);
 int test_buf(char *buf, int len);
 
@@ -78,6 +86,7 @@ void as3_test02()
 }
 
 // 测试修改AS传入的内存块数据，并确定返回的数据是修改过的。
+// as3_test03(bufbytes:int, buflen:int ):int
 void as3_test03()
 {
 	int ret = -1;
@@ -95,6 +104,38 @@ void as3_test03()
 	}
 
 	AS3_Return(ret);
+}
+
+// as3_test0301(byteData:ByteArray):int
+void as3_test0301()
+{
+	int ret = 0;
+    char *buf;
+    int buflen;
+
+    inline_as3(
+    	"import flash.utils.ByteArray;\n"
+    	"%0 = byteData.bytesAvailable;\n" 
+    	: "=r"(buflen));
+    buf = (char *)malloc(buflen);
+
+    inline_as3(
+    	"CModule.ram.position = %0;\n" 
+    	"byteData.readBytes(CModule.ram);\n"
+    	: : "r"(buf));
+
+
+    // Now buf points to a copy of the data from byteData.
+    // Note that byteData.position has changed to the end of the stream.
+
+    // ... do stuff ...
+	if(buf)
+	{
+		ret = test_buf(buf, buflen);
+	}
+
+    free(buf);
+   	AS3_Return(buflen);
 }
 
 // 04修改传入的一个AS中的int指针，05使用修改过的值
@@ -180,6 +221,11 @@ int test_buf(char *buf, int len)
 		for(i=0; i<len; i++)
 		{
 			buf[i] += 1;
+
+			if(i<6)
+			{
+				as3_tracef("buf[%d] = %d\n", i, buf[i]);
+			}
 		}
 		return 0;
 	}

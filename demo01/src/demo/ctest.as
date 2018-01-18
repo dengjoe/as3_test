@@ -6,6 +6,7 @@ package demo
 	import kevin.democ.as3_test01;
 	import kevin.democ.as3_test02;
 	import kevin.democ.as3_test03;
+	import kevin.democ.as3_test0301;
 	import kevin.democ.as3_test04;
 	import kevin.democ.as3_test05;
 
@@ -33,6 +34,7 @@ package demo
 		private function test_func03():void
 		{
 			var ret:int = 0;
+			trace("\ntest_func03:");
 			
 			// 内存数据传给c函数,经c函数转换后再传回
 			var b1:ByteArray = new ByteArray();
@@ -58,6 +60,27 @@ package demo
 			trace("b1.position=" + b1.position + " b1.length=" + b1.length);
 			CModule.free(b1Ptr);			
 		}
+		
+		private function test_func0301():void
+		{
+			var ret:int = 0;
+			trace("\ntest_func0301:");
+			
+			// 内存数据传给c函数,经c函数转换后再传回
+			var b1:ByteArray = new ByteArray();
+			var i:int = 0;
+			for(i=0; i<10; i++)
+			{
+				b1[i]=i;
+			}
+			trace("b1:" + b1 + " b1[]=" + b1[0] + b1[1] + b1[2] + b1[3]);
+			trace("b1.position=" + b1.position + " b1.length=" + b1.length);
+			
+			ret = as3_test0301(b1);
+			trace("as3_test03 ret=" + ret);
+			trace("b1:" + b1 + " b1[]=" + b1[0] + b1[1] + b1[2] + b1[3]);
+		}
+		
 		
 		private function test_func04():void
 		{

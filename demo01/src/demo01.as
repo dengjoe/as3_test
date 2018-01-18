@@ -38,14 +38,14 @@ package
 //			draw_text("你好，hello！", 0);
 //			test_text("你好，good！", 50);
 
-			var wk:Worker01 = new Worker01(this);
-			wk.begin_work();
+//			var wk:Worker01 = new Worker01(this);
+//			wk.begin_work();
 			
 //			var post:post_test = new post_test();
 //			post.test();
 
-//			var ct:ctest = new ctest();
-//			ct.test_cfunc();
+			var ct:ctest = new ctest();
+			ct.test_cfunc();
 			
 //			var mytest:MyTest = new MyTest;
 //			mytest.test();

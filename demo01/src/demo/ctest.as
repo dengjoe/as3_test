@@ -28,6 +28,7 @@ package demo
 			
 			
 			test_func03();
+			test_func0301();
 			test_func04();
 		}
 		

@@ -59,7 +59,7 @@ void as3_test01()
 	int ret = 12;
 //	char tmp[15] = {0};
 
-	as3_tracef("mystr = %d\n", ret);
+	as3_tracef("mystr = %d", ret);
 //	as3_trace(tmp);
 
 	AS3_Return(ret);
@@ -215,6 +215,7 @@ int test_param(char *sign, int len)
 
 int test_buf(char *buf, int len)
 {
+	char sztmp[20] = {0};
 	if(len>0)
 	{
 		int i = 0;
@@ -222,9 +223,10 @@ int test_buf(char *buf, int len)
 		{
 			buf[i] += 1;
 
-			if(i<6)
+			if(i<=6)
 			{
-				as3_tracef("buf[%d] = %d\n", i, buf[i]);
+				sprintf(sztmp, "buf[%d] = %d", i, buf[i]);
+				as3_trace(sztmp);
 			}
 		}
 		return 0;

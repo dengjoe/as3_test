@@ -123,12 +123,12 @@ void as3_test0301()
     	"CModule.ram.position = %0;\n" 
     	"byteData.readBytes(CModule.ram);\n"
     	: : "r"(buf));
-
+    // the heap in C is exposed on the AS3 side as CModule.ram, which is a ByteArray object.
+	// A pointer malloc'd in C is seen in AS3 as an offset into CModule.ram.
 
     // Now buf points to a copy of the data from byteData.
     // Note that byteData.position has changed to the end of the stream.
 
-    // ... do stuff ...
 	if(buf)
 	{
 		ret = test_buf(buf, buflen);
